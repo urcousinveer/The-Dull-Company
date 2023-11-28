@@ -1,0 +1,65 @@
+/* Reset some default styles */
+body, ul {
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar styles */
+.navbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+}
+
+
+.navbar-menu {
+    list-style: none;
+    display: flex;
+}
+
+.navbar-menu li {
+    margin: 0 15px;
+}
+
+.navbar-menu a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.3s;
+}
+
+.navbar-menu a:hover {
+    color: #55acee; /* Change color on hover */
+}
+
+
+.manage-submenu {
+    list-style: none;
+    display: none;
+    position: absolute;
+    left:auto;
+    background-color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.has-submenu:hover .manage-submenu {
+    display: block;
+}
+
+.manage-submenu li {
+    width: 100%;
+    text-align: left;
+}
+
+.manage-submenu a {
+    padding: 10px;
+    display: block;
+}
+
+.manage-submenu a:hover {
+    background-color: #555;
+}
