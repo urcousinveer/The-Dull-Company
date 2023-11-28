@@ -1,4 +1,6 @@
 <?php
+
+require_once '../controller/UserController.php';
 class UserModel {
     private $db;
 
@@ -8,14 +10,13 @@ class UserModel {
 
     // Function to check if a username is already taken
     public function isUsernameTaken($username) {
+        $count = 0;
+
         $query = "SELECT COUNT(*) FROM users WHERE username = ?";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $stmt->bind_result($count);
-        
-        // Initialize $count to 0
-        $count = 0;
     
         // Fetch the result and assign the value to $count
         if ($stmt->fetch()) {
@@ -29,34 +30,33 @@ class UserModel {
     
 
     // Function to register a new user
-    public function registerUser($username, $password) {
-        // Hash the password before storing it in the database
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    /*public function registerUser($username, $password) {
+       
 
         // Insert user information into the 'users' table
         $query = "INSERT INTO users (username, password) VALUES (?, ?)";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param("ss", $username, $hashedPassword);
+        $stmt->bind_param("ss", $username);
 
         return $stmt->execute();
-    }
+    }*/
 
     // Function to authenticate a user
     public function authenticateUser($username, $password) {
-        // Retrieve hashed password from the database for the given username
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        
+    
         $query = "SELECT password FROM users WHERE username = ?";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param("s", $username);
         $stmt->execute();
-        $stmt->bind_result($hashedPassword);
+        $result = $stmt->get_result();
 
-        if ($stmt->fetch()) {
-            // Verify the password
-            return password_verify($password, $hashedPassword);
-        } else {
-            return false; // User not found
+        if ($result->num_rows > 0) {
+            
+            $userRecord = $result->fetch_assoc();
+            if (password_verify($password, $userRecord["password"])){
+            return true; // This is if username and pwd is corrrect.
+            }
+        return false; // if it failed
         }
     }
     
