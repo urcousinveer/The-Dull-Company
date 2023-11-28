@@ -1,9 +1,26 @@
 <?php
 class ProductModel {
-    private $db;
 
+    // Connect to database
+    private $db;
     public function __construct($db) {
         $this->db = $db;
+    }
+
+    public function getAllProducts() {
+        $query = "SELECT * FROM items";
+        $result = $this->db->query($query);
+
+        $products = [];
+
+        if ($result->num_rows > 0){
+            while ($row = $result->fetch_assoc()) {
+                $products[] = $row;
+            }
+        }
+
+        return $products;
+
     }
 
     // Function to search for products based on a keyword
