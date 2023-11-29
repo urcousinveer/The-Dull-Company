@@ -18,7 +18,7 @@ echo '
                     <li><a href="../View/search_orders.php">Search Orders</a></li>
                 </ul>
             </li>
-            <li><a href="product_controller.php">Browse Products</a></li>
+            <li><a href="../controller/product_controller.php">Browse Products</a></li>
             <li><a href="search_products.php">Search</a></li>
             <li><a href="cart.php">View Cart</a></li>
             <li><a href="checkout.php">Checkout</a></li>

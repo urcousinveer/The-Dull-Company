@@ -11,7 +11,7 @@ echo '
     <nav class="navbar">
         <ul class="navbar-menu">
             <li><a href="../View/home_page.php">Home</a></li>
-            <li><a href="product_controller.php">Browse Products</a></li>
+            <li><a href="../controller/product_controller.php">Browse Products</a></li>
             <li><a href="search_products.php">Search</a></li>
             <li><a href="cart.php">View Cart</a></li>
             <li><a href="checkout.php">Checkout</a></li>
