@@ -1,3 +1,5 @@
+<!--File to control browsing products-->
+
 <?php
 require_once ('../model/ProductModel.php');
 

@@ -9,7 +9,7 @@ echo '
 <header>
     <nav class="navbar">
         <ul class="navbar-menu">
-            <li><a href="home_page.php">Home</a></li>
+            <li><a href="../View/home_page.php">Home</a></li>
             <li class="has-submenu">
                 <a href="#">Manage</a>
                 <ul class="manage-submenu">

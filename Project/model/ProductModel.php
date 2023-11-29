@@ -25,21 +25,20 @@ class ProductModel {
 
     // Function to search for products based on a keyword
     public function searchProducts($keyword) {
-
-        $query = "SELECT * FROM items WHERE categoryName LIKE '%searchTerm%' OR itemName LIKE '%searchTerm%";
+        $query = "SELECT * FROM items WHERE categoryName LIKE '%$keyword%' OR itemName LIKE '%$keyword%'";
         $result = $this->db->query($query);
         
         $products = [];
 
-        if ($result->num_rows > 0){
+        if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $products[] = $row;
             }
         }
 
         return $products;
-
     }
+
 
     // Function to add a new product
     public function addProduct($productName, $productDescription, $productPrice, $productQuantity, $productImage) {

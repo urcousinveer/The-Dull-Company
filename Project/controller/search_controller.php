@@ -1,3 +1,5 @@
+<!--File to control search results-->
+
 <?php
 require_once ('../model/ProductModel.php');
 
@@ -13,10 +15,11 @@ $con = mysqli_connect($host, $user, $password, $db_name);
 
 $productModel = new ProductModel($con);
 
+if (isset($_POST['search'])) {
 
-
-$products = $productModel->searchProducts($keyword);
-
+    $keyword = filter_input(INPUT_POST, 'search');
+    $products = $productModel->searchProducts($keyword);
+}
 // Include the view page
 include ('../View/search_products.php');
 
