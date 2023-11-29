@@ -8,22 +8,25 @@
 <body>
     <h2>Add New Product</h2>
     
-    <!-- Product form -->
-    <form action="product_controller.php?action=add" method="post">
-        <label for="productName">Product Name:</label>
-        <input type="text" id="productName" name="productName" required><br>
+    
+    <form action="../controller/admin_controller.php" method="post">
+        <label for="categoryName">Category Name:</label>
+        <input type="text" id="categoryName" name="categoryName" required><br>
 
-        <label for="productDescription">Product Description:</label>
-        <textarea id="productDescription" name="productDescription" required></textarea><br>
+        <label for="productName">Item Name:</label>
+        <input type="text" id="itemName" name="itemName" required><br>
 
-        <label for="productPrice">Product Price:</label>
-        <input type="number" id="productPrice" name="productPrice" step="0.01" required><br>
+        <label for="itemDescription">Item Description:</label>
+        <textarea id="itemDescription" name="itemDescription" required></textarea><br>
 
-        <label for="productQuantity">Product Quantity:</label>
-        <input type="number" id="productQuantity" name="productQuantity" required><br>
+        <label for="listPrice">List Price:</label>
+        <input type="number" id="listPrice" name="listPrice" step="0.01" required><br>
 
-        <label for="productImage">Product Image:</label>
-        <input type="file" id="productImage" name="productImage" accept="image/*" required><br>
+        <label for="itemQuantity">Product Quantity:</label>
+        <input type="number" id="itemQuantity" name="itemQuantity" required><br>
+
+        <label for="itemImage">Item Image (jpg):</label>
+        <input type="file" id="itemImage" name="itemImage" accept="image/jpg" required><br>
 
         <input type="submit" value="Add Product">
     </form>

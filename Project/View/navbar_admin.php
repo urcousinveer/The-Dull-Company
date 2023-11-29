@@ -13,9 +13,9 @@ echo '
             <li class="has-submenu">
                 <a href="#">Manage</a>
                 <ul class="manage-submenu">
-                    <li><a href="add_product.php">Add Product</a></li>
-                    <li><a href="remove_product.php">Remove Product</a></li>
-                    <li><a href="search_orders.php">Search Orders</a></li>
+                    <li><a href="../View/add_product.php">Add Product</a></li>
+                    <li><a href="../View/remove_product.php">Remove Product</a></li>
+                    <li><a href="../View/search_orders.php">Search Orders</a></li>
                 </ul>
             </li>
             <li><a href="product_controller.php">Browse Products</a></li>
