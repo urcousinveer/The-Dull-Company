@@ -25,17 +25,20 @@ class ProductModel {
 
     // Function to search for products based on a keyword
     public function searchProducts($keyword) {
-        // Perform the product search based on the keyword
-        $query = "SELECT * FROM products WHERE name LIKE ?";
-        $stmt = $this->db->prepare($query);
-        $keyword = '%' . $keyword . '%';
-        $stmt->bind_param("s", $keyword);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $stmt->close();
 
-        // Process and return the search results
-        return $result->fetch_all(MYSQLI_ASSOC);
+        $query = "SELECT * FROM items WHERE categoryName LIKE '%searchTerm%' OR itemName LIKE '%searchTerm%";
+        $result = $this->db->query($query);
+        
+        $products = [];
+
+        if ($result->num_rows > 0){
+            while ($row = $result->fetch_assoc()) {
+                $products[] = $row;
+            }
+        }
+
+        return $products;
+
     }
 
     // Function to add a new product

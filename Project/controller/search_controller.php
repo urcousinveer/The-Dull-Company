@@ -13,11 +13,12 @@ $con = mysqli_connect($host, $user, $password, $db_name);
 
 $productModel = new ProductModel($con);
 
-// Get all products
-$products = $productModel->getAllProducts();
+
+
+$products = $productModel->searchProducts($keyword);
 
 // Include the view page
-include ('../View/browse_products.php');
+include ('../View/search_products.php');
 
 
 

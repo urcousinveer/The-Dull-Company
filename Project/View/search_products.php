@@ -3,45 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Search Results</title>
+    <link rel="stylesheet" href="../css/browse_products.css">
+    <title>Search Results</title>
 </head>
 <body>
-    <h1>Product Search Results</h1>
+    <div>
+    <?php include_once('navbar_regular.php'); ?>    
+    </div>
+    <div>
+        <h1>Search Results!</h1>
+    </div>
+    <?php if (empty($products)): ?>
+        <p>No products available, sorry!</p>
+    <?php else: ?>
+        <div class="product-container">
+            <?php foreach ($products as $product): ?>
+                <div class="product-card">
+                    <img src="../img/<?php echo $product['itemName'];?>.jpg"
+                    onclick="showProductInfo('<?php echo $product['itemName']; ?>','<?php echo $product['itemDescription']; ?>')">
+                    <h3 onclick="showProductInfo('<?php echo $product['itemName']; ?>', '<?php echo $product['itemDescription']; ?>')"><?php echo $product['itemName']; ?> </h3>
+                    <p><?php echo '$' . $product['listPrice']; ?></p>
+                    <a href="#" class=add-cart-button>Add to Cart</a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
-    <?php
-    // Assume $db is your database connection
-    require_once 'ProductModel.php';
+    <!--pop up card for more information-->
+    <div class="modal-container" id="productModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeProductInfo()">&times;</span>
+            <h2 id="modalProductName"></h2>
+            <p id="modalProductDescription"></p>
+        </div>
+    </div>
 
-    if (isset($_GET['search'])) {
-        $searchKeyword = $_GET['search'];
-
-        $productModel = new ProductModel($db);
-        $searchResults = $productModel->searchProducts($searchKeyword);
-
-        if ($searchResults) {
-            // Display search results
-            foreach ($searchResults as $result) {
-                $productId = $result['id'];
-                $productName = $result['name'];
-                $productDescription = $result['description'];
-                $productPrice = $result['price'];
-                $productImage = $result['image'];
-
-                // Display each product in the search results
-                echo "<div>";
-                echo "<h2>$productName</h2>";
-                echo "<p>Description: $productDescription</p>";
-                echo "<p>Price: $productPrice</p>";
-                echo "<img src='product_images/$productImage' alt='$productName' width='150' height='150'>";
-                echo "<a href='product_details.php?id=$productId'>View Details</a>";
-                echo "</div>";
-            }
-        } else {
-            echo "<p>No results found for '$searchKeyword'.</p>";
+    <script>
+        function showProductInfo(productName, productDescription) {
+            document.getElementById('modalProductName').innerText = productName;
+            document.getElementById('modalProductDescription').innerText = productDescription;
+            document.getElementById('productModal').style.display = 'flex';
         }
-    } else {
-        echo "<p>No search keyword provided.</p>";
-    }
-    ?>
+
+        function closeProductInfo() {
+            document.getElementById('productModal').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
