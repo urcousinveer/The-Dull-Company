@@ -1,20 +1,35 @@
 <?php
 
-require_once '../controller/UserController.php';
+include 'dbConnect.php';
+
 class UserModel {
-    private $db;
+
+   private $db;
 
     public function __construct($db) {
         $this->db = $db;
     }
+    public function checkCredentials($username, $password) {
+        //global $con;
+        $connection = $this->db->getConnection();
 
-    // Function to check if a username is already taken
-    public function isUsernameTaken($username) {
+        // Perform database query to check credentials
+        $query = "SELECT * FROM users WHERE username='$username' AND password='$password'";
+        $result = mysqli_query($connection, $query);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            $user = mysqli_fetch_assoc($result);
+            return $user['user_type']; // Assuming there is a 'user_type' column in your database
+        }
+
+        return false;
+    }
+    public function isUsernameTaken($usernameR) {
         $count = 0;
 
         $query = "SELECT COUNT(*) FROM users WHERE username = ?";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param("s", $username);
+        $stmt->bind_param("s", $usernameR);
         $stmt->execute();
         $stmt->bind_result($count);
     
@@ -27,38 +42,21 @@ class UserModel {
             return false;
         }
     }
-    
-
-    // Function to register a new user
-    /*public function registerUser($username, $password) {
-       
-
-        // Insert user information into the 'users' table
-        $query = "INSERT INTO users (username, password) VALUES (?, ?)";
+    public function registerUser($usernameR, $email, $passwordR) {
+        
+        $query = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param("ss", $username);
+        $stmt->bind_param("sss", $usernameR, $email, $passwordR);
 
-        return $stmt->execute();
-    }*/
-
-    // Function to authenticate a user
-    public function authenticateUser($username, $password) {
-    
-        $query = "SELECT password FROM users WHERE username = ?";
-        $stmt = $this->db->prepare($query);
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            
-            $userRecord = $result->fetch_assoc();
-            if (password_verify($password, $userRecord["password"])){
-            return true; // This is if username and pwd is corrrect.
-            }
-        return false; // if it failed
+        if ($stmt->execute()) {
+            $stmt->close();
+            return true; // Registration successful
+        } else {
+            $stmt->close();
+            return $stmt->error; // Return the error message if registration fails
         }
     }
-    
 }
+
 ?>
+

@@ -1,6 +1,9 @@
 <?php
 
-require_once '../Model/UserModel.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+include '../model/UserModel.php';
 
 class UserController {
     private $userModel;
@@ -9,60 +12,76 @@ class UserController {
         $this->userModel = new UserModel($db);
     }
 
-    // Function to register a new user
-    /*public function registerUser($username, $password) {
-        return $this->userModel->registerUser($username, $password);
-    }*/
+    public function loginUser() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $username = isset($_POST['username']) ? $_POST['username'] : '';
+            $password = isset($_POST['password']) ? $_POST['password'] : '';
 
-    // Function to authenticate a user
-    public function authenticateUser($username, $password) {
-        return $this->userModel->authenticateUser($username, $password);
-    }
+            $userType = $this->userModel->checkCredentials($username, $password);
 
-
-    //$userController = new UserController($db);
-
-    public function handleRequest($postData){// Check the action parameter in the URL
-    if (isset($_POST['action'])) {
-        $action = $_POST['action'];
-
-        switch ($action) {
-            /*case 'register':
-                // Handle the registration form submission
-                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $usernameRegister = $_POST['usernameRegister'];
-                    $passwordRegister = $_POST['passwordRegister'];
-
-                    $result = $userController->registerUser($usernameRegister, $passwordRegister);
-
-                    if ($result) {
-                        // Registration successful
-                        header('Location: customer_view.php'); // Redirect to customer dashboard
-                    } else {
-                    // Handle error, display an error message, etc.
+            if ($userType === 'admin') {
+                header('Location: ../View/home_page.php?user=admin');
+                exit();
+            } elseif ($userType === 'client') {
+                header('Location: ../View/home_page.php?user=client');
+                exit();
+            } else {
+                if (!isset($_POST['signup'])) {
+                    echo "Invalid credentials";
                 }
             }
-            break;*/
-
-            case 'login':
-                // Handle the login form submission
-                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $username = $_POST['username'];
-                    $password = $_POST['password'];
-
-
-                    if ($this->userModel->authenticateUser($username, $password)) {
-                        // Authentication successful
-                        echo "Authentication successful for user: $username";
-                        header('Location: customer_view.php'); // Redirect to customer dashboard
-                    } else {
-                        echo "Authentication failed";
-                        // Handle error, display an error message, etc.
-                    }
-            }
-            break;
         }
     }
+
+    public function signupUser() {
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            
+            $usernameR = isset($_POST['usernameR']) ? $_POST['usernameR'] : '';
+            $email = isset($_POST['email']) ? $_POST['email'] : '';
+            $passwordR = isset($_POST['passwordR']) ? $_POST['passwordR'] : '';
+            $repassword = isset($_POST['repassword']) ? $_POST['repassword'] : '';
+
+            
+            if (empty($usernameR) || empty($email) || empty($passwordR) || empty($repassword)) { //CHECKS IF ANY FIELD IS LEFT EMPTY
+                echo "Please fill all the fields!";
+                return false;
+
+            }elseif ($passwordR !== $repassword) {                              //CHECKS TO CONFIRM PASSWORD MATCH
+                echo "Password confirmation failed. Don't match!";
+                return false;
+
+            }elseif($usernameTaken = $this->userModel->isUsernameTaken($usernameR)){     // IF username taken
+            
+                if ($usernameTaken) {
+                    echo "Sorry the username is already taken. Try some other?";
+                    return false;
+                }
+                
+            }elseif($registrationResult = $this->userModel->registerUser($usernameR, $email, $passwordR)){ // returns bollean value to variable
+            
+                if($registrationResult === true){
+                    echo "Registration successful!";
+                    return true;
+                }else{
+                    echo "Registration failed. Error: " . $registrationResult;
+                    return false;
+                }
+            }
+        }    
+    }
 }
+$db = new Database();
+$userController = new UserController($db);
+
+//ARGUEMENT HANDLERS
+
+$userController->loginUser();               
+$userController->signupUser();
+if (isset($_POST['signup'])) {
+    $userController->signupUser();
 }
+
+
 ?>
+

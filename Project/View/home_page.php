@@ -28,6 +28,8 @@
     
     <!-- Customer options -->
     <ul>
+        <li><a href="login_page.php">Login</a></li>
+        <li><a href="signup_page.php">Sign Up</a></li>
         <li><a href="search_products.php">Search Products</a></li>
         <li><a href="view_cart.php">View Cart</a></li>
         <!-- Add more options as needed -->
