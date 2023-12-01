@@ -39,6 +39,13 @@ class UserController {
         }
     }
 
+    public function logoutUser() {
+        session_start();
+        session_destroy();
+        header('Location: ../View/home_page.php');
+        exit();
+    }
+
     public function signupUser() {
 
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -86,6 +93,10 @@ $userController->loginUser();
 $userController->signupUser();
 if (isset($_POST['signup'])) {
     $userController->signupUser();
+}
+if (isset($_GET['logout'])) {
+    $userController = new UserController($db);
+    $userController->logoutUser();
 }
 
 
