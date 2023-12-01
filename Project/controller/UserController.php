@@ -18,13 +18,19 @@ class UserController {
             $password = isset($_POST['password']) ? $_POST['password'] : '';
 
             $userType = $this->userModel->checkCredentials($username, $password);
-
-            if ($userType === 'admin') {
-                header('Location: ../View/home_page.php?user=admin');
-                exit();
-            } elseif ($userType === 'client') {
-                header('Location: ../View/home_page.php?user=client');
-                exit();
+            
+            if ($userType === 'admin' || $userType === 'client') {
+                session_start();
+                $_SESSION['user_type'] = $userType;
+                $_SESSION['username'] = $username;
+    
+                if ($userType === 'admin') {
+                    header('Location: ../View/home_page.php?user=admin');
+                    exit();
+                } elseif ($userType === 'client') {
+                    header('Location: ../View/home_page.php?user=client');
+                    exit();
+                }
             } else {
                 if (!isset($_POST['signup'])) {
                     echo "Invalid credentials";

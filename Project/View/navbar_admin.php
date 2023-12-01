@@ -1,11 +1,8 @@
-<?php
-//navbar for admin
 
-echo '
-<html>
-<head>
+<!--navbar for admin -->
+
+
     <link rel="stylesheet" href="../css/navbar.css">
-</head>
 <header>
     <nav class="navbar">
         <ul class="navbar-menu">
@@ -16,14 +13,12 @@ echo '
                     <li><a href="../View/add_product.php">Add Product</a></li>
                     <li><a href="../View/remove_product.php">Remove Product</a></li>
                     <li><a href="../View/search_orders.php">Search Orders</a></li>
+                    <li><a href="../View/update_inventory.php">Update Inventory</a></li>
                 </ul>
             </li>
             <li><a href="../controller/product_controller.php">Browse Products</a></li>
-            <li><a href="search_products.php">Search</a></li>
             <li><a href="cart.php">View Cart</a></li>
             <li><a href="checkout.php">Checkout</a></li>
         </ul>
-    </nav> <!-- Fix: Close the nav tag here -->
+    </nav>
 </header>
-</html>';
-?>

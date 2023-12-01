@@ -6,10 +6,17 @@
     <title>Add New Product</title>
 </head>
 <body>
+    <?php
+    include '../View/navbar_admin.php';
+    ?>
     <h2>Add New Product</h2>
     
     
-    <form action="../controller/admin_controller.php" method="post">
+    <form action="../controller/admin_controller.php" method="POST" enctype="multipart/form-data">
+        
+        <!--Identify the form-->
+        <input type="hidden" name="formType" value="addProduct">
+
         <label for="categoryName">Category Name:</label>
         <input type="text" id="categoryName" name="categoryName" required><br>
 
@@ -28,7 +35,7 @@
         <label for="itemImage">Item Image (jpg):</label>
         <input type="file" id="itemImage" name="itemImage" accept="image/jpg" required><br>
 
-        <input type="submit" value="Add Product">
+        <input type="submit" value="Submit">
     </form>
 </body>
 </html>

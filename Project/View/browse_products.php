@@ -7,9 +7,24 @@
     <title>Browse Products</title>
 </head>
 <body>
-    <div>
-    <?php include_once('navbar_regular.php'); ?>    
-    </div>
+<?php
+    session_start();
+
+    // Check if the user is logged in
+    if (isset($_SESSION['user_type'])) {
+        // User is logged in, include the relevant navbar
+        if ($_SESSION['user_type'] === 'admin') {
+            include '../View/navbar_admin.php';
+        }
+        elseif ($_SESSION['user_type'] === 'client') {
+            include '../View/navbar_customer.php';
+        }
+    }
+    else {
+        // User is not logged in, include the default navbar
+        include '../View/navbar_regular.php';
+    }
+    ?>
     <div>
         <h1>Browse Products!</h1>
     </div>

@@ -1,23 +1,15 @@
-<?php
-//navbar for customers
 
-echo '
+<!-- navbar for customers -->
 
-<html>
-<head>
-    <link rel="stylesheet" href="../css/navbar.css">
-</head>
+<link rel="stylesheet" href="../css/navbar.css">
 <header>
     <nav class="navbar">
         <ul class="navbar-menu">
             <li><a href="../View/home_page.php">Home</a></li>
             <li><a href="../controller/product_controller.php">Browse Products</a></li>
-            <li><a href="search_products.php">Search</a></li>
             <li><a href="cart.php">View Cart</a></li>
             <li><a href="checkout.php">Checkout</a></li>
         </ul>
     <nav>
-<header>
-</html>
+</header>
 '
-?>

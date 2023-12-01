@@ -3,41 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Homepage</title>
-    <style>
-        .product-container {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .product-card {
-            margin: 10px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            text-align: center;
-        }
-
-        .product-image {
-            max-width: 100%;
-            height: auto;
-        }
-    </style>
+    <title>Homepage</title>
 </head>
 <body>
-    <h1>Welcome, Customer!</h1>
+<?php
+    session_start();
+
+    // Check if the user is logged in
+    if (isset($_SESSION['user_type'])) {
+        // User is logged in, include the relevant navbar
+        if ($_SESSION['user_type'] === 'admin') {
+            include '../View/navbar_admin.php';
+        }
+        elseif ($_SESSION['user_type'] === 'client') {
+            include '../View/navbar_customer.php';
+        }
+    }
+    else {
+        // User is not logged in, include the default navbar
+        include '../View/navbar_regular.php';
+    }
+    ?>
+    <br>
+    <h1>Welcome!</h1>
+
+    <h3>Search for a product here</h3>
+
     
-    <!-- Customer options -->
-    <ul>
-        <li><a href="login_page.php">Login</a></li>
-        <li><a href="signup_page.php">Sign Up</a></li>
-        <li><a href="search_products.php">Search Products</a></li>
-        <li><a href="view_cart.php">View Cart</a></li>
-        <!-- Add more options as needed -->
-    </ul>
-
-    <h2>Featured Products</h2>
-
-    <!-- Search form -->
     <form action="../controller/search_controller.php" method="POST">
         <label for="search">Search Products:</label>
         <input type="text" id="search" name="search" required>
