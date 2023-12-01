@@ -137,6 +137,30 @@ class ProductModel {
             return $stmt->error;
         }
     }
+
+    public function getProductDetails($itemName) {
+        $query = "SELECT id, itemName AS name, listPrice AS listPrice FROM items WHERE itemName = ?";
+        $stmt = $this->db->prepare($query);
+    
+        if (!$stmt) {
+            die("Error in preparing the statement: " . $this->db->error);
+        }
+    
+        $stmt->bind_param("s", $itemName);
+        $stmt->execute();
+    
+        if ($stmt->error) {
+            die("Error in executing the statement: " . $stmt->error);
+        }
+    
+        $result = $stmt->get_result();
+        $productDetails = $result->fetch_assoc();
+        $stmt->close();
+    
+        return $productDetails;
+    }
+    
+
     
 }
 ?>

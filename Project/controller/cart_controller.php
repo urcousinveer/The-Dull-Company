@@ -1,78 +1,78 @@
 <?php
-// Assume $db is your database connection
 
-session_start();
+include ('../model/ProductModel.php');
 
-// Check the action parameter in the URL
-if (isset($_GET['action'])) {
-    $action = $_GET['action'];
+class CartController {
 
-    switch ($action) {
-        case 'add':
-            // Handle adding items to the cart
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $productId = $_POST['productId'];
-                $quantity = $_POST['quantity'];
+    private $productModel;
 
-                // Fetch product details from the database (replace with your actual query)
-                $query = "SELECT * FROM products WHERE id = $productId";
-                $result = $db->query($query);
+    // connect to database
+    public function __construct($db) {
+        $this->productModel = new ProductModel($db);
+    }
 
-                if ($result->num_rows > 0) {
-                    $row = $result->fetch_assoc();
-                    $productName = $row['name'];
-                    $productPrice = $row['price'];
+    public function handleCartActions() {
+        session_start();
 
-                    // Add the item to the cart (using session for simplicity, replace with a database if needed)
-                    if (!isset($_SESSION['cart'])) {
-                        $_SESSION['cart'] = array();
-                    }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['action'])) {
+                $action = $_POST['action'];
 
-                    $cartItem = array(
-                        'productId' => $productId,
-                        'productName' => $productName,
-                        'quantity' => $quantity,
-                        'price' => $productPrice
-                    );
-
-                    array_push($_SESSION['cart'], $cartItem);
-
-                    // Redirect back to the product details page
-                    header("Location: product_details.php?id=$productId");
-                } else {
-                    echo "<p>Product not found.</p>";
-                }
-            }
-        break;
-
-        case 'remove':
-            // Handle removing items from the cart
-            if (isset($_GET['productId'])) {
-                $productIdToRemove = $_GET['productId'];
-
-                // Find the index of the item with the specified product ID in the cart
-                $itemIndex = -1;
-                foreach ($_SESSION['cart'] as $index => $cartItem) {
-                    if ($cartItem['productId'] == $productIdToRemove) {
-                        $itemIndex = $index;
+                switch ($action) {
+                    case 'add':
+                        $this->addToCart();
                         break;
-                    }
-                }
-
-                // Remove the item from the cart if found
-                if ($itemIndex != -1) {
-                    unset($_SESSION['cart'][$itemIndex]);
-                    $_SESSION['cart'] = array_values($_SESSION['cart']); // Reindex the array
-
-                    // Redirect back to the cart page
-                    header('Location: cart.php');
-                } else {
-                    echo "<p>Item not found in the cart.</p>";
+                    default:
+                        echo "error!"; // Handle invalid action
+                        break;
                 }
             }
-        break;    
+        }
+    }
 
+    private function addToCart() {
+        $itemName = $_POST['itemName'];
 
+        // Retrieve product details based on $itemName and store it in the cart
+        $productDetails = $this->getProductDetails($itemName);
+
+        if ($productDetails) {
+            if (!isset($_SESSION['cart'])) {
+                $_SESSION['cart'] = [];
+            }
+
+            // Check if the product is already in the cart
+            $existingProduct = array_filter($_SESSION['cart'], function ($item) use ($itemName) {
+                return $item['name'] == $itemName;
+            });
+
+            if (empty($existingProduct)) {
+                // Add the product to the cart
+                $_SESSION['cart'][] = [
+                    'id' => $productDetails['id'],
+                    'name' => $productDetails['name'],
+                    'price' => $productDetails['price'],
+                    'quantity' => 1,
+                ];
+            } else {
+                // Increment quantity if the product is already in the cart
+                $existingProductName = key($existingProduct);
+                $_SESSION['cart'][$existingProductName]['quantity'] += 1;
+            }
+
+            // Redirect back to the browse_products.php page
+            header('Location: ../View/browse_products.php');
+            exit();
+        }
+    }
+
+    private function getProductDetails($itemName) {
+        return $this->productModel->getProductDetails($itemName);
     }
 }
+
+// Example of usage
+$db = new Database();  // Assuming you have a Database class
+$cartController = new CartController($db);
+$cartController->handleCartActions();
 ?>

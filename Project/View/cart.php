@@ -1,50 +1,50 @@
+<!-- view_cart.php -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="../css/cart.css">
+    <title>View Cart</title>
 </head>
 <body>
-    <h1>Shopping Cart</h1>
-
     <?php
-    // Assume $db is your database connection
+        session_start();
 
-    session_start();
-
-    // Check if the cart is not empty
-    if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
-        echo "<table border='1'>";
-        echo "<tr><th>Product</th><th>Quantity</th><th>Price</th><th>Action</th></tr>";
-
-        $totalPrice = 0;
-
-        foreach ($_SESSION['cart'] as $cartItem) {
-            $productId = $cartItem['productId'];
-            $productName = $cartItem['productName'];
-            $quantity = $cartItem['quantity'];
-            $price = $cartItem['price'];
-            $totalItemPrice = $quantity * $price;
-
-            // Display each item in the cart
-            echo "<tr>";
-            echo "<td>$productName</td>";
-            echo "<td>$quantity</td>";
-            echo "<td>$totalItemPrice</td>";
-            echo "<td><a href='cart_controller.php?action=remove&productId=$productId'>Remove</a></td>";
-            echo "</tr>";
-
-            $totalPrice += $totalItemPrice;
+        // Check if the user is logged in
+        if (isset($_SESSION['user_type'])) {
+            // User is logged in, include the relevant navbar
+            if ($_SESSION['user_type'] === 'admin') {
+                include '../View/navbar_admin.php';
+            } elseif ($_SESSION['user_type'] === 'client') {
+                include '../View/navbar_customer.php';
+            }
+        } else {
+            // User is not logged in, include the default navbar
+            include '../View/navbar_regular.php';
         }
-
-        echo "<tr><td colspan='2'><strong>Total:</strong></td><td colspan='2'>$totalPrice</td></tr>";
-        echo "</table>";
-    } else {
-        echo "<p>Your cart is empty.</p>";
-    }
     ?>
 
-    <p><a href="customer_view.php">Continue Shopping</a></p>
+    <div>
+        <h1>View Cart</h1>
+    </div>
+
+    <?php
+        // Check if the cart is not empty
+        if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+            echo '<div class="cart-container">';
+            foreach ($_SESSION['cart'] as $cartItem) {
+                echo '<div class="cart-item">';
+                echo '<p>Name: ' . $cartItem['itemName'] . '</p>';
+                echo '<p>Price: $' . $cartItem['listPrice'] . '</p>';
+                echo '<p>Quantity: ' . $cartItem['quantity'] . '</p>';
+                echo '</div>';
+            }
+            echo '</div>';
+        } else {
+            echo '<p>Your cart is empty.</p>';
+        }
+    ?>
 </body>
 </html>
