@@ -41,8 +41,8 @@ Class admin_controller {
                 if($itemAdd){
 
                     header('Location: ../View/add_product.php?formType=addProduct');
+                    //exit(); will test to see if we need it here or not later.
                     echo "Item added";
-                    exit();
                 }
                 else{
                     echo "error";

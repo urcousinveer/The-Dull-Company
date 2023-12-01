@@ -32,6 +32,9 @@ class CartController {
                     case 'decreaseQuantity':
                         $this->decreaseQuantity();
                         break;
+                    case 'checkout':
+                        $this->handleCheckout();
+                        break;
                     default:
                         echo "error!";
                         break;
@@ -121,12 +124,29 @@ class CartController {
     }
 
     private function handleCheckout() {
-        // Insert the order into the database
-        $orderID = $this->productModel->insertOrder($_SESSION['userID'], $_SESSION['orderTotal']);
+        session_start();
+        var_dump($_SESSION); //error check
+        // Check if the user is logged in
+        if (!isset($_SESSION['userID'])) {
+            echo 'Error processing the order: User not logged in.';
+            exit();
+        }
     
-        // Insert order items into the database
+        $userID = $_SESSION['userID'];
+        $orderTotal = $_SESSION['orderTotal'];
+    
+        // Insert the order into the database
+        $orderID = $this->productModel->insertOrder($userID, $orderTotal);
+    
         foreach ($_SESSION['cart'] as $cartItem) {
-            $this->productModel->insertOrderItem($orderID, $cartItem['itemID'], $cartItem['quantity']);
+            $itemID = $this->productModel->getItemIDByName($cartItem['itemName']);
+            $quantity = $cartItem['quantity'];
+            $orderItemID = $this->productModel->insertOrderItem($orderID, $itemID, $quantity);
+
+            if($orderItemID === true){
+                echo "order item";
+                return true;
+            }
         }
     
         // Clear the user's cart
@@ -139,10 +159,7 @@ class CartController {
         header('Location: ../View/checkout.php');
         exit();
     }
-
-
-}
-
+}    
 $db = new Database();
 $cartController = new CartController($db);
 $cartController->handleCartActions();

@@ -56,6 +56,46 @@ class UserModel {
             return $stmt->error; // Return the error message if registration fails
         }
     }
+
+    public function getUserData($username) {
+        $query = "SELECT userID, user_type FROM users WHERE username = ?";
+        $stmt = $this->db->prepare($query);
+    
+        if (!$stmt) {
+            die("Error in preparing the statement: " . $this->db->error);
+        }
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+    
+        if ($stmt->error) {
+            die("Error in executing the statement: " . $stmt->error);
+        }
+    
+        $result = $stmt->get_result();
+    
+        $userID = null;
+        $userType = null;
+    
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $userID = $row['userID'];
+                $userType = $row['user_type'];
+                // Other assignments...
+            }
+        }
+    
+        // Checking if user data is found
+        if ($userID !== null && $userType !== null) {
+            return [
+                'userID' => $userID,
+                'user_type' => $userType,
+        
+            ];
+        } else {
+            return null; // Or handle the case where user data is not found
+        }
+    }
+    
 }
 
 ?>

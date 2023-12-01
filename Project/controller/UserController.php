@@ -16,18 +16,19 @@ class UserController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = isset($_POST['username']) ? $_POST['username'] : '';
             $password = isset($_POST['password']) ? $_POST['password'] : '';
-
-            $userType = $this->userModel->checkCredentials($username, $password);
-            
-            if ($userType === 'admin' || $userType === 'client') {
-                session_start();
-                $_SESSION['user_type'] = $userType;
-                $_SESSION['username'] = $username;
     
-                if ($userType === 'admin') {
+            $userData = $this->userModel->getUserData($username);
+    
+            if ($userData && ($userData['user_type'] === 'admin' || $userData['user_type'] === 'client')) {
+                session_start();
+                $_SESSION['user_type'] = $userData['user_type'];
+                $_SESSION['username'] = $userData['username'];
+                $_SESSION['userID'] = $userData['userID']; // Set the userID in the session
+    
+                if ($userData['user_type'] === 'admin') {
                     header('Location: ../View/home_page.php?user=admin');
                     exit();
-                } elseif ($userType === 'client') {
+                } elseif ($userData['user_type'] === 'client') {
                     header('Location: ../View/home_page.php?user=client');
                     exit();
                 }
@@ -38,6 +39,7 @@ class UserController {
             }
         }
     }
+    
 
     public function logoutUser() {
         session_start();

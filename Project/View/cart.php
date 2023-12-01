@@ -80,29 +80,31 @@
                 echo '</div>';
             }
             echo '</div>';
+            $totalQuantity = 0;
+            $totalAmount = 0;
+
+            foreach ($_SESSION['cart'] as $cartItem) {
+                $totalQuantity += $cartItem['quantity'];
+                $totalAmount += $cartItem['quantity'] * $cartItem['listPrice'];
+            }
+
+            $_SESSION['orderTotal'] = $totalAmount;
+
+            echo '<p>Total Quantity: ' . $totalQuantity . '</p>';
+            echo '<p>Total Amount: $' . number_format($totalAmount, 2) . '</p>';
+
+
+            if (isset($_SESSION['user_type']) && ($_SESSION['user_type'] === 'client' || $_SESSION['user_type'] === 'admin')) {
+                echo '<form method="post" action="../controller/cart_controller.php">';
+                echo '<input type="hidden" name="action" value="checkout">';
+                echo '<input type="submit" value="Checkout">';
+                echo '</form>';
+            }
         } else {
             echo '<p>Your cart is empty.</p>';
         }
 
-        $totalQuantity = 0;
-        $totalAmount = 0;
-
-        foreach ($_SESSION['cart'] as $cartItem) {
-            $totalQuantity += $cartItem['quantity'];
-            $totalAmount += $cartItem['quantity'] * $cartItem['listPrice'];
-        }
-
-        $_SESSION['orderTotal'] = $totalAmount;
-
-        echo '<p>Total Quantity: ' . $totalQuantity . '</p>';
-        echo '<p>Total Amount: $' . number_format($totalAmount, 2) . '</p>';
-
-
-        if (isset($_SESSION['user_type']) && ($_SESSION['user_type'] === 'client' || $_SESSION['user_type'] === 'admin')) {
-            echo '<form method="post" action="../View/checkout.php">';
-            echo '<input type="submit" value="Checkout">';
-            echo '</form>';
-        }
+        
     ?>
 </body>
 </html>

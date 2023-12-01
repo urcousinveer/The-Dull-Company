@@ -164,36 +164,65 @@ class ProductModel {
         // Insert a new order and return the order ID
         $query = "INSERT INTO orders (userID, orderTotal) VALUES (?, ?)";
         $stmt = $this->db->prepare($query);
-
-        if (!$stmt) {
-            die("Error in preparing the statement: " . $this->db->error);
-        }
         $stmt->bind_param("ss", $userID, $orderTotal);
-        
+
         if ($stmt->execute()) {
-            $orderID = $stmt->insert_id;
+            //$orderID = $stmt->insert_id;
             $stmt->close();
-            return $orderID;
+
+            return true;//$orderID;
         } else {
-            error_log("Error in executing insertOrder statement: " . $stmt->error);
             $stmt->close();
-            die("Error in executing the statement: " . $stmt->error);
+            return $stmt->error; 
+            //error_log("Error in executing insertOrder statement: " . $stmt->error);
+            //$stmt->close();
+            //die("Error in executing the statement: " . $stmt->error);
         }
     }
 
+    public function getItemIDByName($itemName) {
+        $query = "SELECT itemID FROM items WHERE itemName = ?";
+        $stmt = $this->db->prepare($query);
+    
+        if (!$stmt) {
+            die("Error in preparing the statement: " . $this->db->error);
+        }
+    
+        $stmt->bind_param("s", $itemName);
+        $stmt->execute();
+    
+        if ($stmt->error) {
+            die("Error in executing the statement: " . $stmt->error);
+        }
+        $result = $stmt->get_result();
+
+        $itemID = null;
+    
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $itemID = $row['itemID'];
+        }
+    
+        $stmt->close();
+    
+        return $itemID;
+    }
+    
     public function insertOrderItem($orderID, $itemID, $quantity) {
         // Insert a new order item
         $query = "INSERT INTO orderItems (orderID, itemID, quantity) VALUES (?, ?, ?)";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param("sss", $orderID, $itemID, $quantity);
         
-        if (!$stmt->execute()) {
+        if ($stmt->execute()) {
+            $stmt->close();
+            return true;
+        }else{
             error_log("Error in executing insertOrder statement: " . $stmt->error);
             $stmt->close();
-            die("Error in executing the statement: " . $stmt->error);
+            return false;
+            //die("Error in executing the statement: " . $stmt->error);
         }
-    
-        $stmt->close();
     }
 
     

@@ -29,8 +29,8 @@
         <label for="listPrice">List Price:</label>
         <input type="number" id="listPrice" name="listPrice" step="0.01" required><br>
 
-        <label for="itemQuantity">Product Quantity:</label>
-        <input type="number" id="itemQuantity" name="itemQuantity" required><br>
+        <label for="quantity">Product Quantity:</label>
+        <input type="number" id="quantity" name="quantity" required><br>
 
         <label for="itemImage">Item Image (jpg):</label>
         <input type="file" id="itemImage" name="itemImage" accept="image/jpg" required><br>
