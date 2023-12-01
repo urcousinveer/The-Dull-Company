@@ -36,14 +36,72 @@
             echo '<div class="cart-container">';
             foreach ($_SESSION['cart'] as $cartItem) {
                 echo '<div class="cart-item">';
-                echo '<p>Name: ' . $cartItem['itemName'] . '</p>';
-                echo '<p>Price: $' . $cartItem['listPrice'] . '</p>';
+                
+                // Check if 'name' key exists before accessing it
+                if (array_key_exists('itemName', $cartItem)) {
+                    echo '<p>Name: ' . $cartItem['itemName'] . '</p>';
+                } else {
+                    echo '<p>Name not available</p>';
+                }
+
+                // Check if 'listPrice' key exists before accessing it
+                if (array_key_exists('listPrice', $cartItem)) {
+                    echo '<p>Price: $' . $cartItem['listPrice'] . '</p>';
+                } else {
+                    echo '<p>Price not available</p>';
+                }
+
                 echo '<p>Quantity: ' . $cartItem['quantity'] . '</p>';
+                echo '<br>';
+
+                // increase quantity button
+                echo '<form method="post" action="../controller/cart_controller.php">';
+                echo '<input type="hidden" name="action" value="increaseQuantity">';
+                echo '<input type="hidden" name="itemName" value="' . $cartItem['itemName'] . '">';
+                echo '<button type="submit">Add Extra</button>';
+                echo '</form>';
+                echo '<br>';
+
+                // decrease quantity button
+                echo '<form method="post" action="../controller/cart_controller.php">';
+                echo '<input type="hidden" name="action" value="decreaseQuantity">';
+                echo '<input type="hidden" name="itemName" value="' . $cartItem['itemName'] . '">';
+                echo '<button type="submit">Remove One</button>';
+                echo '</form>';
+                echo '<br>';
+
+                // remove item button
+                echo '<form method="post" action="../controller/cart_controller.php">';
+                echo '<input type="hidden" name="action" value="remove">';
+                echo '<input type="hidden" name="itemName" value="' . $cartItem['itemName'] . '">';
+                echo '<button type="submit">Remove Item</button>';
+                echo '</form>';
+
                 echo '</div>';
             }
             echo '</div>';
         } else {
             echo '<p>Your cart is empty.</p>';
+        }
+
+        $totalQuantity = 0;
+        $totalAmount = 0;
+
+        foreach ($_SESSION['cart'] as $cartItem) {
+            $totalQuantity += $cartItem['quantity'];
+            $totalAmount += $cartItem['quantity'] * $cartItem['listPrice'];
+        }
+
+        $_SESSION['orderTotal'] = $totalAmount;
+
+        echo '<p>Total Quantity: ' . $totalQuantity . '</p>';
+        echo '<p>Total Amount: $' . number_format($totalAmount, 2) . '</p>';
+
+
+        if (isset($_SESSION['user_type']) && ($_SESSION['user_type'] === 'client' || $_SESSION['user_type'] === 'admin')) {
+            echo '<form method="post" action="../View/checkout.php">';
+            echo '<input type="submit" value="Checkout">';
+            echo '</form>';
         }
     ?>
 </body>

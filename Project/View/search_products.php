@@ -8,7 +8,24 @@
 </head>
 <body>
     <div>
-    <?php include_once('navbar_regular.php'); ?>    
+    <?php
+    session_start();
+
+    // Check if the user is logged in
+    if (isset($_SESSION['user_type'])) {
+        // User is logged in, include the relevant navbar
+        if ($_SESSION['user_type'] === 'admin') {
+            include '../View/navbar_admin.php';
+        }
+        elseif ($_SESSION['user_type'] === 'client') {
+            include '../View/navbar_customer.php';
+        }
+    }
+    else {
+        // User is not logged in, include the default navbar
+        include '../View/navbar_regular.php';
+    }
+    ?>
     </div>
     <div>
         <h1>Search Results!</h1>
@@ -23,7 +40,13 @@
                     onclick="showProductInfo('<?php echo $product['itemName']; ?>','<?php echo $product['itemDescription']; ?>')">
                     <h3 onclick="showProductInfo('<?php echo $product['itemName']; ?>', '<?php echo $product['itemDescription']; ?>')"><?php echo $product['itemName']; ?> </h3>
                     <p><?php echo '$' . $product['listPrice']; ?></p>
-                    <a href="#" class=add-cart-button>Add to Cart</a>
+                    
+                    <!--form to add to cart submission-->
+                    <form action="../controller/cart_controller.php" method="post">
+                    <input type="hidden" name="itemName" value="<?php echo $product['itemName']; ?>">
+                    <input type="hidden" name="action" value="add">
+                    <input type="submit" value="Add to Cart" class="add-cart-button">
+                    </form>
                 </div>
             <?php endforeach; ?>
         </div>

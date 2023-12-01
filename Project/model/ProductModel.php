@@ -139,7 +139,7 @@ class ProductModel {
     }
 
     public function getProductDetails($itemName) {
-        $query = "SELECT id, itemName AS name, listPrice AS listPrice FROM items WHERE itemName = ?";
+        $query = "SELECT itemName AS itemName, listPrice AS listPrice FROM items WHERE itemName = ?";
         $stmt = $this->db->prepare($query);
     
         if (!$stmt) {
@@ -160,6 +160,41 @@ class ProductModel {
         return $productDetails;
     }
     
+    public function insertOrder($userID, $orderTotal) {
+        // Insert a new order and return the order ID
+        $query = "INSERT INTO orders (userID, orderTotal) VALUES (?, ?)";
+        $stmt = $this->db->prepare($query);
+
+        if (!$stmt) {
+            die("Error in preparing the statement: " . $this->db->error);
+        }
+        $stmt->bind_param("ss", $userID, $orderTotal);
+        
+        if ($stmt->execute()) {
+            $orderID = $stmt->insert_id;
+            $stmt->close();
+            return $orderID;
+        } else {
+            error_log("Error in executing insertOrder statement: " . $stmt->error);
+            $stmt->close();
+            die("Error in executing the statement: " . $stmt->error);
+        }
+    }
+
+    public function insertOrderItem($orderID, $itemID, $quantity) {
+        // Insert a new order item
+        $query = "INSERT INTO orderItems (orderID, itemID, quantity) VALUES (?, ?, ?)";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("sss", $orderID, $itemID, $quantity);
+        
+        if (!$stmt->execute()) {
+            error_log("Error in executing insertOrder statement: " . $stmt->error);
+            $stmt->close();
+            die("Error in executing the statement: " . $stmt->error);
+        }
+    
+        $stmt->close();
+    }
 
     
 }
