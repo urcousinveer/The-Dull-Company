@@ -59,7 +59,7 @@ class UserController {
 
             
             if (empty($usernameR) || empty($email) || empty($passwordR) || empty($repassword)) { //CHECKS IF ANY FIELD IS LEFT EMPTY
-                echo "Please fill all the fields!";
+                
                 return false;
 
             }elseif ($passwordR !== $repassword) {                              //CHECKS TO CONFIRM PASSWORD MATCH
@@ -73,7 +73,7 @@ class UserController {
                     return false;
                 }
                 
-            }elseif($registrationResult = $this->userModel->registerUser($usernameR, $email, $passwordR)){ // returns bollean value to variable
+            }elseif($registrationResult = $this->userModel->registerUser($usernameR, $email, $passwordR)){ // returns bollean value
             
                 if($registrationResult === true){
                     echo "Registration successful!";
@@ -88,8 +88,6 @@ class UserController {
 }
 $db = new Database();
 $userController = new UserController($db);
-
-//ARGUEMENT HANDLERS
 
 $userController->loginUser();               
 $userController->signupUser();

@@ -1,6 +1,6 @@
 <?php
 
-require_once 'OrderModel.php';
+require_once '../model/OrderModel.php';
 
 class OrderController {
     private $orderModel;
@@ -9,32 +9,54 @@ class OrderController {
         $this->orderModel = new OrderModel($db);
     }
 
-    // Function to search for orders
-    public function searchOrders($productName) {
-        // Call the OrderModel to perform the order search
-        return $this->orderModel->searchOrders($productName);
-    }
-}
+    public function searchForm() {
 
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-$orderController = new OrderController($db);
+            if (isset($_POST['action'])) {
+                $action = $_POST['action'];
 
-
-if (isset($_GET['action'])) {
-    $action = $_GET['action'];
-
-    switch ($action) {
-        case 'search':
-            // Handle the order search form submission
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $productName = $_POST['productName'];
-
-                $orders = $orderController->searchOrders($productName);
-
-                // Process the search results as needed
+                switch ($action) {
+                    case 'userSearch':
+                        $this->userSearch();
+                        break;
+                    case 'itemSearch';
+                        $this->itemSearch();
+                        break;
+                    default:
+                        echo "error in form submission!";
+                        break;
+                    }
             }
-        break;
- 
+        }
+                    
     }
+
+    public function userSearch(){
+
+        $username = $_POST['username'];
+
+        $orders = $this->orderModel->searchOrderItems($username);
+
+        return $orders;
+
+    }
+
+    public function itemSearch(){
+        $itemName = $_POST['itemName'];
+
+        $items = $this->orderModel->searchOrders($itemName);
+
+        return $items;
+    }
+
+
 }
+
+
+
+include 'cart_controller.php';
+//$db = new Database();
+//$cartController = new CartController($db);
+//$cartController->handleCartActions();
 ?>

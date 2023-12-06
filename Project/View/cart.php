@@ -7,6 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/cart.css">
     <title>View Cart</title>
+    <style>
+    h1 {
+        text-align: center;
+    }
+</style>
 </head>
 <body>
     <?php

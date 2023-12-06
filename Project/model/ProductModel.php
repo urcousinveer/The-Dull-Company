@@ -115,7 +115,7 @@ class ProductModel {
     
         if ($stmt->execute()) {
             $stmt->close();
-            return true; // product removed
+            return true;
         } else {
             $stmt->close();
             return $stmt->error;
@@ -131,7 +131,7 @@ class ProductModel {
     
         if ($stmt->execute()) {
             $stmt->close();
-            return true; // product updated successfully
+            return true; 
         } else {
             $stmt->close();
             return $stmt->error;
@@ -159,9 +159,10 @@ class ProductModel {
     
         return $productDetails;
     }
-    
+
+    // Insert a new order and return the order ID
     public function insertOrder($userID, $orderTotal) {
-        // Insert a new order and return the order ID
+        
         $query = "INSERT INTO orders (userID, orderTotal) VALUES (?, ?)";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param("ss", $userID, $orderTotal);
@@ -208,8 +209,9 @@ class ProductModel {
         return $itemID;
     }
     
+    // Insert a new order item
     public function insertOrderItem($orderID, $itemID, $quantity) {
-        // Insert a new order item
+        
         $query = "INSERT INTO orderItems (orderID, itemID, quantity) VALUES (?, ?, ?)";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param("sss", $orderID, $itemID, $quantity);
@@ -221,7 +223,6 @@ class ProductModel {
             error_log("Error in executing insertOrder statement: " . $stmt->error);
             $stmt->close();
             return false;
-            //die("Error in executing the statement: " . $stmt->error);
         }
     }
 

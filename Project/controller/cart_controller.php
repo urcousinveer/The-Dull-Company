@@ -46,7 +46,6 @@ class CartController {
     private function addToCart() {
         $itemName = $_POST['itemName'];
 
-        // Retrieve product details based on $itemName and store it in the cart
         $productDetails = $this->productModel->getProductDetails($itemName);
 
         if ($productDetails) {
@@ -68,12 +67,13 @@ class CartController {
                     'quantity' => 1,
                 ];
             } else {
-                // Increment quantity if the product is already in the cart
+
+                // Increment quantity if the product is already in cart
                 $existingProductName = key($existingProduct);
                 $_SESSION['cart'][$existingProductName]['quantity'] += 1;
             }
 
-            // Redirect back to the browse_products.php page
+            // Redirect back to the browse_products
             header('Location: ../controller/product_controller.php');
             exit();
         }
@@ -85,7 +85,7 @@ class CartController {
             return $item['itemName'] !== $itemName;
         });
 
-        // Redirect back to the cart.php page
+        // Redirect back to the cart page
         header('Location: ../View/cart.php');
         exit();
     }
@@ -97,11 +97,11 @@ class CartController {
         foreach ($_SESSION['cart'] as $index => $cartItem) {
             if ($cartItem['itemName'] === $itemName) {
                 $_SESSION['cart'][$index]['quantity']++;
-                break; // Stop the loop once the quantity is increased
+                break;
             }
         }
 
-        // Redirect back to the cart.php page
+        // Redirect back to the cart page
         header('Location: ../View/cart.php');
         exit();
     }
@@ -114,18 +114,23 @@ class CartController {
 
                 // Ensure the quantity doesn't go below 1
                 $_SESSION['cart'][$index]['quantity'] = max(1, $_SESSION['cart'][$index]['quantity'] - 1);
-                break; // Stop the loop once the quantity is decreased
+                break;
             }
         }
 
-        // Redirect back to the cart.php page
+        // Redirect back to the cart page
         header('Location: ../View/cart.php');
         exit();
     }
 
     private function handleCheckout() {
-        session_start();
-        var_dump($_SESSION); //error check
+
+        if (session_status() == PHP_SESSION_NONE) {
+
+            // Start the session only if it's not already started
+            session_start();
+        }
+        
         // Check if the user is logged in
         if (!isset($_SESSION['userID'])) {
             echo 'Error processing the order: User not logged in.';
@@ -144,7 +149,7 @@ class CartController {
             $orderItemID = $this->productModel->insertOrderItem($orderID, $itemID, $quantity);
 
             if($orderItemID === true){
-                echo "order item";
+                echo "<h4>Your order has been placed!</h4>";
                 return true;
             }
         }
@@ -152,13 +157,14 @@ class CartController {
         // Clear the user's cart
         unset($_SESSION['cart']);
     
-        // Display a confirmation message (you can customize this part based on your needs)
         echo 'Order placed successfully!';
     
-        // Redirect to a thank you page or any other relevant page
+        // Redirect to checkout
         header('Location: ../View/checkout.php');
         exit();
     }
+
+    
 }    
 $db = new Database();
 $cartController = new CartController($db);

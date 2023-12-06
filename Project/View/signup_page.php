@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
     <style>
-        /* Reset some default styles */
+
         body, ul {
             margin: 0;
             padding: 0;
         }
 
-        /* Navbar styles */
+
         .navbar {
             display: flex;
             justify-content: flex-end;
@@ -38,10 +38,10 @@
         }
 
         .navbar-menu a:hover {
-            color: #55acee; /* Change color on hover */
+            color: #55acee; 
         }
 
-        /* Sign Up form styles */
+
         h1 {
             text-align: center;
             margin-top: 20px;
@@ -78,7 +78,7 @@
             background-color: #555;
         }
 
-        /* Additional styles */
+
         p {
             text-align: center;
             margin-top: 20px;

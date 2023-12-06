@@ -80,7 +80,6 @@ class UserModel {
             while ($row = $result->fetch_assoc()) {
                 $userID = $row['userID'];
                 $userType = $row['user_type'];
-                // Other assignments...
             }
         }
     
@@ -92,7 +91,7 @@ class UserModel {
         
             ];
         } else {
-            return null; // Or handle the case where user data is not found
+            return null;
         }
     }
     

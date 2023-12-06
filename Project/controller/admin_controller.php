@@ -18,7 +18,6 @@ Class admin_controller {
 
     public function adminFunctions() {
     
-        // add a product
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             echo "you've submitted a form!";
@@ -33,6 +32,7 @@ Class admin_controller {
 
             $formType = filter_input(INPUT_POST, 'formType');
 
+            // add a product
             if($formType === 'addProduct'){
 
                 $itemImage = $this->productModel->checkImageUpload($itemName, $itemImage);
@@ -48,7 +48,9 @@ Class admin_controller {
                     echo "error";
                 }
 
-            }elseif($formType === 'removeProduct'){
+            }
+            // remove a product
+            elseif($formType === 'removeProduct'){
                 
                 $itemRemove = $this->productModel->removeProduct($itemName);
 
@@ -62,7 +64,9 @@ Class admin_controller {
                     echo "error";
                 }
 
-            }elseif($formType === 'updateInventory'){
+            }
+            // update inventory
+            elseif($formType === 'updateInventory'){
 
                $updateInventory = $this->productModel->updateInventory($itemName, $updateAmount); 
                
@@ -89,7 +93,6 @@ Class admin_controller {
 $db = new Database();
 $admin_controller = new admin_controller($db);
 
-//ARGUEMENT HANDLERS
 $admin_controller->adminFunctions();               
 
 ?>
